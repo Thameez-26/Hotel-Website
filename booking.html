@@ -1,17 +1,14 @@
-<!-- booking.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Book Your Stay</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Book Room</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <style>
-    body {
-      background-color: #f8f9fa;
-    }
+    body { background: #f8f9fa; }
     .booking-form {
-      background-color: white;
+      background: white;
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -22,43 +19,61 @@
 
 <div class="container my-5">
   <div class="booking-form">
-    <h3 class="mb-4">Book Your Stay</h3>
+    <h3 class="mb-3">Book Your Stay</h3>
+    <div class="mb-3">
+      <strong>Room:</strong> <span id="roomName">-</span><br>
+      <strong>Price:</strong> ₹<span id="roomPrice">-</span> / night
+    </div>
+
     <form id="bookingForm">
       <div class="row mb-3">
         <div class="col-md-6">
           <label for="checkin" class="form-label">Check-in Date</label>
-          <input type="date" class="form-control" id="checkin" required>
+          <input type="date" id="checkin" class="form-control" required />
         </div>
         <div class="col-md-6">
           <label for="checkout" class="form-label">Check-out Date</label>
-          <input type="date" class="form-control" id="checkout" required>
+          <input type="date" id="checkout" class="form-control" required />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="guestName" class="form-label">Full Name</label>
+          <input type="text" id="guestName" class="form-control" required />
+        </div>
+        <div class="col-md-6">
+          <label for="guestEmail" class="form-label">Email</label>
+          <input type="email" id="guestEmail" class="form-control" required />
         </div>
       </div>
       <div class="mb-3">
-        <label for="guestName" class="form-label">Full Name</label>
-        <input type="text" class="form-control" id="guestName" required>
+        <label for="guestCount" class="form-label">Number of Guests</label>
+        <input type="number" id="guestCount" class="form-control" min="1" value="1" required />
       </div>
-      <div class="mb-3">
-        <label for="guestEmail" class="form-label">Email Address</label>
-        <input type="email" class="form-control" id="guestEmail" required>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Proceed to Confirmation</button>
+      <button type="submit" class="btn btn-primary w-100">Confirm Booking</button>
     </form>
   </div>
 </div>
 
 <script>
-  document.getElementById("bookingForm").addEventListener("submit", function(e) {
+  const params = new URLSearchParams(window.location.search);
+  const room = params.get("room") || "Unknown Room";
+  const price = params.get("price") || "0";
+
+  document.getElementById("roomName").textContent = room;
+  document.getElementById("roomPrice").textContent = price;
+
+  document.getElementById("bookingForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // Store data in localStorage
     const bookingData = {
+      room,
+      price: `₹${price} / night`,
       checkin: document.getElementById("checkin").value,
       checkout: document.getElementById("checkout").value,
       guestName: document.getElementById("guestName").value,
       guestEmail: document.getElementById("guestEmail").value,
-      room: "Deluxe Ocean View Room", // Optional: You can make this dynamic later
-      price: "₹5,499 / night"
+      guestCount: document.getElementById("guestCount").value
     };
 
     localStorage.setItem("bookingInfo", JSON.stringify(bookingData));
